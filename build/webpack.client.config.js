@@ -49,27 +49,18 @@ if (process.env.NODE_ENV === 'production') {
     new webpack.optimize.ModuleConcatenationPlugin(),
     // auto generate service worker
     new SWPrecachePlugin({
-      cacheId: 'mnml',
-      // importScripts: ['foo.js'],
+      cacheId: 'detlef',
       minify: true,
       dontCacheBustUrlsMatching: /./,
       staticFileGlobsIgnorePatterns: [/\.map$/, /\.json$/],
       runtimeCaching: [
         {
           urlPattern: '/',
-          handler: 'networkFirst' // fastest || networkFirst
+          handler: 'fastest'
         },
         {
-          urlPattern:  /\/(notes|about)/,
-          handler: 'networkFirst'
-        },
-        {
-          urlPattern: '/notes/:slug',
-          handler: 'networkFirst'
-        },
-        {
-          urlPattern: '/topics/:topic',
-          handler: 'networkFirst'
+          urlPattern:  /\/(contact|about)/,
+          handler: 'fastest'
         }
       ]
     })
