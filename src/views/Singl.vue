@@ -1,0 +1,101 @@
+<template lang="pug">
+.singl
+  .slide(v-for="i, index in item.fields.images" :key="index")
+    img(ref="img" :data-src="i.fields.file.url + '?w=1920&fl=progressive'" :src="'data:image/svg+xml; charset=utf-8, <svg width=%22'+i.fields.file.details.image.width+'%22 height=%22'+i.fields.file.details.image.height+'%22 viewBox=%220 0'+ i.fields.file.details.image.width+'%20'+ i.fields.file.details.image.height+'%22 xmlns=%22http:%2F%2Fwww.w3.org%2F2000%2Fsvg%22><path d=%22M0 0h'+i.fields.file.details.image.width+'v'+i.fields.file.details.image.width+'H0z%22 fill=%22%23000000%22/></svg>'")
+  .slide(v-if="item.fields.video")
+    iframe(:src="item.fields.video" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen)
+  .slide(v-if="item.fields.description")
+    div
+      h3 {{item.fields.description}}
+      router-link(to="/") Back to Overview
+  //-pre {{item}}
+</template>
+
+<script>
+export default {
+  name: 'single-view',
+
+  meta () {
+    const meta = {
+      title: '',
+      description: '',
+      card: ''
+    }
+    return meta
+  },
+
+  asyncData ({store, data}) {
+    return store.dispatch('items')
+  },
+
+  computed: {
+    filter () {
+      return this.$store.state.filter
+    },
+
+    item () {
+      function getKeyByValue(object, value) {
+        return Object.keys(object).find(key => object[key].fields.slug === value)
+      }
+      let a = getKeyByValue(this.$store.state.items, this.$route.params.singl)
+      return  this.$store.state.items[a]
+    }
+  },
+
+  mounted () {
+    if(window.localStorage.getItem('items') === null) {
+
+    } else {
+      this.$store.dispatch('session', {
+        status: true,
+        data: JSON.parse(window.localStorage.getItem('items'))
+      })
+    }
+
+    [].forEach.call(this.$refs.img, img => {
+      img.setAttribute('src', img.getAttribute('data-src'))
+      img.onload = () => {
+        img.removeAttribute('data-src')
+      }
+    })
+
+
+  }
+}
+</script>
+
+<style lang="stylus">
+@import "../variables"
+.singl.view
+  max-width none
+.slide
+  display flex
+  align-items flex-start
+  justify-content center
+  height calc(100vh - 80px)
+  position relative
+  &:last-child
+    align-items center
+    text-align center
+  img
+  svg
+    max-width calc(100% - 80px)
+    max-height calc(100% - 80px)
+    vertical-align middle
+  iframe
+    height: calc(100% - 80px)
+    width: calc(156.25vh - 80px)
+
+@media (max-width: $mobile)
+  .slide
+    height auto
+    margin-bottom 1rem
+    img
+      max-width none
+      max-height none
+      width 100%
+      height auto
+  .slide iframe
+      height calc(56.25vw - 1rem)
+      width 100%
+</style>

@@ -1,14 +1,25 @@
 <template lang="pug">
 header(role="banner")
   nav
-    router-link(to="/" exact) Detlef Schneider
-    router-link(to="/about") About
-    router-link(to="/contact") Contact
+    router-link(to="/" exact) #[span(@click="filter('all')") Detlef Schneider]
+    div
+      router-link(to="/") #[span(@click="filter('film')") Film]
+      router-link(to="/") #[span(@click="filter('fashion')") Fashion]
+      router-link(to="/") #[span(@click="filter('advertising')") Advertising]
+      router-link(to="/") #[span(@click="filter('sports')") Sports]
+      router-link(to="/about") About
+      router-link(to="/contact") Contact
 </template>
 
 <script>
 export default {
-  name: 'header'
+  name: 'header',
+
+  methods: {
+    filter: function(name) {
+     this.$store.dispatch('filter', name)
+    }
+  }
 }
 </script>
 
@@ -17,8 +28,9 @@ export default {
 header
   position sticky
   top 0
-  background-color rgba(white, .95)
+  background-color white
   z-index 1
+  //border-bottom 1px solid tomato
   nav
     margin 0 auto
     height 64px
@@ -26,31 +38,32 @@ header
     align-items center
     //justify-content center
     display flex
+    > a
+      text-transform uppercase
+      letter-spacing .25px
+      font-size 28px
     div
-      display flex
-      align-items center
-    a
-      font-size 14px
-      margin 0 1rem
-      color lightness(black, 46%)
-      border-bottom 1px solid transparent
-      transition all 150ms ease-in
-      &:first-child
-        display inline-block
-        margin-left 0
-        svg
+      margin-left auto
+      a
+        font-size 1.4375rem
+        color rgb(17,17,17)
+        &:last-child:after
+          width 0
+      a
+      button
+        &:after
+          margin 0 .5rem
+          vertical-align middle
+          content ""
+          width 20px
+          height 2px
+          background-color black
           display inline-block
-      // &:last-child
-      //   margin-left auto
-      //   height 24px
-      //   display inline-block
-      //   padding-right 0
-      &.router-link-active
-        color $blue
-        border-bottom 1px solid $blue
 @media (max-width: 720px)
-  header nav
-    padding-left 16px
-    padding-right 16px
-    height 56px
+  header
+    nav
+      display none
+      padding-left 16px
+      padding-right 16px
+      height 56px
 </style>

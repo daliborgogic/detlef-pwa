@@ -12,7 +12,11 @@ const serverMetaMixin = {
     const meta = getMeta(this)
     if (meta) {
       //console.log('META ', meta)
-      this.$ssrContext.title = meta.title || 'Detlef Schneider'
+      if(meta.title) {
+        this.$ssrContext.title = meta.title || 'Detlef Schneider'
+      } else {
+        this.$ssrContext.title = 'Detlef Schneider'
+      }
       this.$ssrContext.description = meta.description || 'Detlef Schneider is a German born photographer whose work is predominantly focused on sport and fashion.'
       this.$ssrContext.card = meta.card
     }
@@ -23,7 +27,9 @@ const clientMetaMixin = {
   mounted () {
     const meta = getMeta(this)
     if (meta) {
-      document.title = `${meta.title + ' | '} Detlef Schneider`
+      document.title = `${meta.title + ' | Detlef Schneider'}`
+    } else {
+      document.title = `Detlef Schneider`
     }
   }
 }

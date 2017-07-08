@@ -34,6 +34,62 @@ if (window.__INITIAL_STATE__) {
 // and async components...
 router.onReady(() => {
 
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js').then(reg => {
+      reg.onupdatefound = () => {
+        const installingWorker = reg.installing
+        installingWorker.onstatechange = () => {
+          switch (installingWorker.state) {
+            case 'installed':
+              // Note that any opaque (i.e. cross-domain, without CORS) responses in the cache will return a size of 0.
+              caches.keys().then(cache => {
+                let total = 0
+                return Promise.all(
+                  cache.map(cache => {
+                    // Change this to match the cache name filter you want.
+                    if (!cache.includes('mnml')) {
+                      return
+                    }
+
+                    return caches.open(cache).then(c => {
+                      return c.keys().then(keys => {
+                        return Promise.all(
+                          keys.map(key => {
+                            return c.match(key)
+                              .then(res => res.arrayBuffer())
+                              .then(buffer => total += buffer.byteLength)
+                          })
+                        )
+                      })
+                    })
+                  })
+                ).then(() => {
+                  console.log(`Total bytes: ${total}`)
+                  store.dispatch('snackbar', {
+                    id: navigator.serviceWorker.controller === null ? 2 : 1,
+                    show: true,
+                    size: navigator.serviceWorker.controller === null ? 0 : (total / 1024).toFixed()
+                  })
+                })
+              })
+              break
+            case 'waiting':
+              // This is an update to a previous service worker, and it's now waiting.
+              break
+            case 'redundant':
+              // Something went wrong and the service worked couldn't install.
+              console.error('The installing service worker became redundant.')
+              break
+            default:
+              // Ignore
+          }
+        }
+      }
+    }).catch(e => {
+      console.error(`Error during service worker registration:', ${e}`)
+    })
+  }
+
   // https://developers.google.com/analytics/devguides/collection/analyticsjs/single-page-applications
   const isLocalhost = Boolean(
     window.location.hostname === 'localhost' ||
@@ -49,7 +105,7 @@ router.onReady(() => {
   // https://developers.google.com/analytics/devguides/collection/analyticsjs/debugging
   // window.ga_debug = {trace: true}
 
-  ga('create', 'UA-29874917-4', 'auto')
+  ga('create', 'UA-NNNNNN-N', 'auto')
 
   if (isLocalhost) {
     ga('set', 'sendHitTask', null)
@@ -59,6 +115,7 @@ router.onReady(() => {
     ga('set', 'page', to.fullPath)
     ga('send', 'pageview')
   })
+
   // Add router hook for handling asyncData.
   // Doing it after initial route is resolved so that we don't double-fetch
   // the data that we already have. Using router.beforeResolve() so that all
@@ -75,7 +132,7 @@ router.onReady(() => {
       return next()
     }
     bar.start()
-    Promise.all(asyncDataHooks.map(hook => hook({ store,  route: to })))
+    Promise.all(asyncDataHooks.map(hook => hook({ store, route: to })))
       .then(() => {
         bar.finish()
         next()

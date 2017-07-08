@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from'vue-router'
 
 const Home = () => import(/* webpackChunkName: "home" */ '@/views/Home.vue')
+const Singl = () => import(/* webpackChunkName: "singl" */ '@/views/Singl.vue')
 const Contact = () => import(/* webpackChunkName: "contact" */ '@/views/Contact.vue')
 const About = () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
 const NotFound = () => import(/* webpackChunkName: "not-found" */ '@/views/NotFound.vue')
@@ -20,6 +21,7 @@ export function createRouter () {
     },
     routes: [
       { path: '/', component: Home },
+      { path: '/:tag/:singl', component: Singl },
       { path: '/contact', component: Contact },
       { path: '/about', component: About },
       { path: '*', component: NotFound }

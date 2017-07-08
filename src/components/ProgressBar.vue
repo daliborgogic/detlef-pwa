@@ -102,6 +102,6 @@ export default {
   width 0
   transition width 0.2s, opacity 0.4s
   opacity 1
-  background-color #212121
+  background-color black
   z-index 999999
 </style>

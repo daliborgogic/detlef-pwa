@@ -17,6 +17,7 @@
   "dependencies": {
     "contentful": "^4.5.0",
     "debug": "^2.6.8",
+    "dotenv": "^4.0.0",
     "es6-promise": "^4.1.1",
     "express": "^4.15.2",
     "extract-text-webpack-plugin": "^2.1.0",

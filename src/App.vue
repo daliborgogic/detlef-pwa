@@ -4,7 +4,6 @@
   main
     transition(name="fade" mode="out-in")
       router-view.view
-  app-footer
   snack-bar
 </template>
 
@@ -13,13 +12,11 @@ const DOMAIN = 'http://localhost:5000'
 
 import SnackBar from '@/components/SnackBar.vue'
 import AppHeader from '@/components/Header.vue'
-import AppFooter from '@/components/Footer.vue'
 
 export default {
   components: {
     SnackBar,
-    AppHeader,
-    AppFooter
+    AppHeader
   },
 
   mounted() {
@@ -40,72 +37,7 @@ export default {
         show: navigator.onLine ? false : navigator.onLine
       })
 
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register(`${DOMAIN}/service-worker.js`).then(reg => {
-          reg.onupdatefound = () => {
-            const installingWorker = reg.installing
-            installingWorker.onstatechange = () => {
-              switch (installingWorker.state) {
-                case 'installed':
-                  // Note that any opaque (i.e. cross-domain, without CORS) responses in the cache will return a size of 0.
-                  caches.keys().then(cache => {
-                    let total = 0
-                    return Promise.all(
-                      cache.map(cache => {
-                        // Change this to match the cache name filter you want.
-                        if (!cache.includes('mnml')) {
-                          return
-                        }
 
-                        return caches.open(cache).then(c => {
-                          return c.keys().then(keys => {
-                            return Promise.all(
-                              keys.map(key => {
-                                return c.match(key)
-                                  .then(res => res.arrayBuffer())
-                                  .then(buffer => total += buffer.byteLength)
-                              })
-                            )
-                          })
-                        })
-                      })
-                    ).then(() => {
-                      console.log(`Total bytes: ${total}`)
-                      this.$store.dispatch('snackbar', {
-                        id: navigator.serviceWorker.controller === null ? 2 : 1,
-                        show: true,
-                        size: navigator.serviceWorker.controller === null ? 0 : (total / 1024).toFixed()
-                      })
-                    })
-                  })
-                  break
-                case 'waiting':
-                  // This is an update to a previous service worker, and it's now waiting.
-                  break
-                case 'redundant':
-                  // Something went wrong and the service worked couldn't install.
-                  console.error('The installing service worker became redundant.')
-                  break
-                default:
-                  // Ignore
-              }
-            }
-          }
-        }).catch(e => {
-          console.error(`Error during service worker registration:', ${e}`)
-        })
-
-        navigator.serviceWorker.ready.then(registration => {
-          registration.sync.register('outbox').then(() => {
-            // registration succeeded
-            console.log('registration succeeded')
-          }, () => {
-            // registration failed
-            console.log('registration failed')
-          })
-        })
-
-      }
     })
   }
 }
@@ -113,6 +45,10 @@ export default {
 
 <style lang="stylus">
 @import "./variables"
+@font-face
+  font-family: 'main'
+  src url('~/public/fonts/main.woff') format('woff')
+  src url('~/public/fonts/main.ttf') format('truetype')
 
 html
   font-family sans-serif
@@ -152,9 +88,10 @@ body
   margin 0
   font-family $sansSerif
   font-weight normal
-  font-size 1rem
-  line-height 1.5
-  color $umbra
+  font-size 1.4375rem
+  line-height 1.30435
+  letter-spacing .2px
+  color black
   background-color white
   overflow-y scroll
   -webkit-font-smoothing antialiased
@@ -171,14 +108,14 @@ p
 a
   background-color transparent
   -webkit-text-decoration-skip objects
-  color $brandColor
+  color black
   text-decoration none
   &:active
   &:hover
     outline-width 0
   &:focus
   &:hover
-    color #212121
+    color black
     text-decoration none
   &:not([href]):not([tabindex])
     color inherit
@@ -202,9 +139,9 @@ a
   touch-action manipulation
 
 .view
-  max-width 600px
+  max-width 720px
   padding 0 1rem
-  margin 30vh auto 0 auto
+  margin 1rem auto 0 auto
   position relative
 
 .fade-enter-active

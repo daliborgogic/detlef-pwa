@@ -10,7 +10,15 @@ export function createStore () {
   return new Vuex.Store({
     state: {
       snackbar: '',
-      message: ''
+      message: '',
+      page: [],
+      items: [],
+      item: '',
+      filter: '',
+      session: {
+        status: false,
+        data: ''
+      }
     },
     actions,
     mutations,
