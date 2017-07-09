@@ -1,3 +1,4 @@
+require('dotenv').config()
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const base = require('./webpack.base.config')
@@ -26,7 +27,10 @@ module.exports = merge(base, {
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-      'process.env.VUE_ENV': '"server"'
+      'process.env.VUE_ENV': '"server"',
+      'process.env.DOMAIN': JSON.stringify(process.env.DOMAIN || 'http://localhost:5000'),
+      'process.env.SPACE_ID': JSON.stringify(process.env.SPACE_ID),
+      'process.env.ACCESS_TOKEN': JSON.stringify(process.env.ACCESS_TOKEN)
     }),
     new VueSSRServerPlugin()
   ]

@@ -1,7 +1,9 @@
 <template lang="pug">
 .singl
   .slide(v-for="i, index in item.fields.images" :key="index")
-    img(ref="img" :data-src="i.fields.file.url + '?w=1920&fl=progressive'" :src="'data:image/svg+xml; charset=utf-8, <svg width=%22'+i.fields.file.details.image.width+'%22 height=%22'+i.fields.file.details.image.height+'%22 viewBox=%220 0'+ i.fields.file.details.image.width+'%20'+ i.fields.file.details.image.height+'%22 xmlns=%22http:%2F%2Fwww.w3.org%2F2000%2Fsvg%22><path d=%22M0 0h'+i.fields.file.details.image.width+'v'+i.fields.file.details.image.width+'H0z%22 fill=%22%23f2f2f2%22/></svg>'")
+    svg(v-if="loading" fill="#000000" :height="i.fields.file.details.image.height" :viewBox="'0 0 '+ i.fields.file.details.image.width+' '+i.fields.file.details.image.height" :width="i.fields.file.details.image.width" xmlns="http://www.w3.org/2000/svg")
+      path(:d="'M0 0h'+i.fields.file.details.image.width+'v'+i.fields.file.details.image.height+'H0z'" fill="#000000")
+    img(v-if="!loading" ref="img" :src="i.fields.file.url + '?w=1920&fl=progressive'")
   .slide(v-if="item.fields.video")
     iframe(:src="item.fields.video" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen)
   .slide(v-if="item.fields.description")
@@ -22,6 +24,11 @@ export default {
       card: ''
     }
     return meta
+  },
+  data () {
+    return {
+      loading: true
+    }
   },
 
   asyncData ({store, data}) {
@@ -45,9 +52,8 @@ export default {
   mounted () {
     [].forEach.call(this.$refs.img, img => {
       img.onload = () => {
-        img.removeAttribute('data-src')
+        this.loading = false
       }
-      img.setAttribute('src', img.getAttribute('data-src'))
     })
   }
 }
