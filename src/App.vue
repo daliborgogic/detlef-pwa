@@ -1,5 +1,5 @@
 <template lang="pug">
-#app
+#app(ref="app")
   app-header
   main
     transition(name="fade" mode="out-in")
@@ -17,6 +17,24 @@ export default {
   components: {
     SnackBar,
     AppHeader
+  },
+
+  mounted () {
+    // https://w3c.github.io/pointerevents/
+    window.addEventListener('pointerdown', e => {
+      switch (e.pointerType) {
+      case 'mouse':
+        // mouse detected
+        this.$refs.app.className += ' mouse'
+        break
+      case 'touch':
+        // touch detected
+        this.$refs.app.className += ' mouse'
+        break
+      default:
+        // pointerType unknown or cannot be detected
+      }
+    })
   }
 }
 </script>

@@ -18,7 +18,7 @@
                    i.fields.file.url + '?w=640&fl=progressive 640w,'+ \
                    i.fields.file.url + '?w=320&fl=progressive 320w'"
           sizes="(min-width: 36em) 33.3vw, 100vw"
-          :data-src="i.fields.file.url + '?w=1920&fl=progressive'"
+          :data-src="i.fields.file.url + '?w=1920&fm=jpg&fl=progressive'"
           alt="")
   .slide(v-if="item.fields.video")
     iframe(:src="item.fields.video"
@@ -74,14 +74,14 @@ export default {
     let observer = new IntersectionObserver(entries => {
       entries.forEach(change => {
         if (change.isIntersecting === true) {
+          //change.target.src = change.target.getAttribute('data-src')
           change.target.srcset = change.target.getAttribute('data-srcset')
-          change.target.src = change.target.getAttribute('data-src')
         }
       })
     }, {
-      root: null,
-      rootMargin: '0px',
-      threshold: [0],
+      // root: null,
+      // rootMargin: '0px',
+      // threshold: [0]
     })
 
     const imgs = [ ...this.$refs.img ]

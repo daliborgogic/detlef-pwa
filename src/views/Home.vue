@@ -3,7 +3,7 @@
   .cards
     //- (original height / original width) x new width
     router-link(v-for="i, index in items" :to="`/${i.fields.tag}/${i.fields.slug}`" :key="index")
-      .card(:style="`background-image: url(${i.fields.card.fields.file.url}?w=360&fl=progressive); padding-top: ${(i.fields.card.fields.file.details.image.height / i.fields.card.fields.file.details.image.width) * 100}%`")
+      .card(ref="card" :style="`background-image: url(${i.fields.card.fields.file.url}?w=360&fl=progressive); padding-top: ${(i.fields.card.fields.file.details.image.height / i.fields.card.fields.file.details.image.width) * 100}%`")
         svg.icon.icon-video(v-if="i.fields.video" fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg")
           path(d="M8 5v14l11-7z")
           path(d="M0 0h24v24H0z" fill="none")
@@ -37,6 +37,21 @@ export default {
     items () {
       return this.$store.state.items
     }
+  },
+  mounted () {
+     // https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver
+    let observer = new IntersectionObserver(entries => {
+      entries.forEach(change => {
+        if (change.isIntersecting === true) {
+          // change.target.srcset = change.target.getAttribute('data-srcset')
+          // change.target.src = change.target.getAttribute('data-src')
+        }
+      })
+    })
+
+    const cards = [ ...this.$refs.card]
+
+    cards.forEach(card => observer.observe(card))
   }
 }
 </script>
