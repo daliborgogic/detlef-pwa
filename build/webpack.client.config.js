@@ -63,7 +63,7 @@ if (process.env.NODE_ENV === 'production') {
           handler: 'fastest'
         },
         {
-          urlPattern:  /\/(contact|about)/,
+          urlPattern:  /\/(contact|about|film|fashion|advertising|sports)/,
           handler: 'fastest'
         }
       ]

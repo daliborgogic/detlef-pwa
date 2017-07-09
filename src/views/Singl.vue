@@ -1,13 +1,14 @@
 <template lang="pug">
 .singl
   .slide(v-for="i, index in item.fields.images" :key="index")
-    svg(v-if="loading" fill="#000000" :height="i.fields.file.details.image.height" :viewBox="'0 0 '+ i.fields.file.details.image.width+' '+i.fields.file.details.image.height" :width="i.fields.file.details.image.width" xmlns="http://www.w3.org/2000/svg")
-      path(:d="'M0 0h'+i.fields.file.details.image.width+'v'+i.fields.file.details.image.height+'H0z'" fill="#000000")
-    img(v-if="!loading" ref="img" :src="i.fields.file.url + '?w=1920&fl=progressive'")
+    .slide-placeholder
+      svg(:height="i.fields.file.details.image.height" :viewBox="'0 0 '+ i.fields.file.details.image.width+' '+i.fields.file.details.image.height" :width="i.fields.file.details.image.width" xmlns="http://www.w3.org/2000/svg")
+        path(:d="'M0 0h'+i.fields.file.details.image.width+'v'+i.fields.file.details.image.height+'H0z'" fill="#F2F2F2")
+      img(v-show="loading === false" ref="img" :src="i.fields.file.url + '?w=1920&fl=progressive'")
   .slide(v-if="item.fields.video")
     iframe(:src="item.fields.video" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen)
   .slide(v-if="item.fields.description")
-    div
+    .slide-back
       h3 {{item.fields.description}}
       router-link(to="/") Back to Overview
   //-pre {{item}}
@@ -69,20 +70,28 @@ export default {
   justify-content center
   height calc(100vh - 80px)
   position relative
-  div
-    max-width 500px
-    h3
-      font-size 23px
-    a
-      font-size 13px
   &:last-child
     align-items center
     text-align center
+.slide-placeholder
+  display flex
+  align-items center
+  justify-content center
+  height 100%
+  position relative
   img
   svg
     max-width calc(100% - 80px)
     max-height calc(100% - 80px)
     vertical-align middle
+  img
+    position absolute
+.slide-back
+  max-width 500px
+  h3
+    font-size 23px
+  a
+    font-size 13px
   iframe
     height: calc(100% - 80px)
     width: calc(156.25vh - 80px)
@@ -92,6 +101,7 @@ export default {
     height auto
     margin-bottom 1rem
     img
+    svg
       max-width none
       max-height none
       width 100%
