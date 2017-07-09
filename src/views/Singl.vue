@@ -7,9 +7,9 @@
       img(v-show="loading === false" ref="img" :src="i.fields.file.url + '?w=1920&fl=progressive'")
   .slide(v-if="item.fields.video")
     iframe(:src="item.fields.video" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen)
-  .slide(v-if="item.fields.description")
+  .slide
     .slide-back
-      h3 {{item.fields.description}}
+      h3(v-if="item.fields.description") {{item.fields.description}}
       router-link(to="/") Back to Overview
   //-pre {{item}}
 </template>
