@@ -9,7 +9,7 @@
           path(d="M0 0h24v24H0z" fill="none")
         .card-overlay
           h2 {{i.fields.title}}
-  pre {{items}}
+  //-pre {{items}}
 </template>
 
 <script>
@@ -37,16 +37,7 @@ export default {
     items () {
       return this.$store.state.items
     }
-  },
-
-  mounted () {
-    window.localStorage.setItem('items', JSON.stringify(this.$store.state.items))
-    this.$store.dispatch('session', {
-      status: true,
-      data: this.items
-    })
   }
-
 }
 </script>
 
@@ -69,9 +60,9 @@ export default {
   margin-bottom 50px
 .icon-video
   position absolute
-  left 1rem
-  top 1rem
-  fill rgba(white, .12)
+  left calc(50% - 20px)
+  top calc(50% - 20px)
+  fill rgba(white, .7)
   width 40px
   height 40px
 .card-overlay

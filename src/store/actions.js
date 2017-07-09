@@ -1,8 +1,8 @@
 import {} from '../api'
 const contentful = require('contentful')
 
-const SPACE_ID = 'xzw2qzqp3wi2'
-const ACCESS_TOKEN = 'c439fd325747c14994ab197531df494c48204c9a6fed7c374ce5e7142138a202'
+const SPACE_ID = process.env.SPACE_ID
+const ACCESS_TOKEN = process.env.ACCESS_TOKEN
 
 const client = contentful.createClient({
   space: SPACE_ID,
@@ -26,13 +26,12 @@ export default {
     return new Promise((resolve, reject) => {
       client.getEntries({
         content_type: 'page'
-      }).then(res => {
+      })
+      .then(res => {
         commit('PAGE', res)
         resolve()
       })
-      .catch((err => {
-        console.error(err)
-      }))
+      .catch((err => console.error(err)))
     })
   },
 
@@ -45,9 +44,7 @@ export default {
         commit('ITEMS', res.items)
         resolve()
       })
-      .catch((err => {
-        console.error(err)
-      }))
+      .catch((err => console.error(err)))
     })
   },
 
@@ -57,16 +54,10 @@ export default {
         content_type: 'item'
       })
       .then(item => {
-        console.log(item.items)
-        console.log('FOUND ', [item.items].filter(task => task.fields.slug === 'slug'))
         commit('ITEM', item )
         resolve()
       })
-      .catch((err => {
-        console.error(err)
-      }))
-
-
+      .catch((err => console.error(err)))
     })
   }
 }

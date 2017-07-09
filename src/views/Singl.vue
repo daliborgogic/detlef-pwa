@@ -1,7 +1,7 @@
 <template lang="pug">
 .singl
   .slide(v-for="i, index in item.fields.images" :key="index")
-    img(ref="img" :data-src="i.fields.file.url + '?w=1920&fl=progressive'" :src="'data:image/svg+xml; charset=utf-8, <svg width=%22'+i.fields.file.details.image.width+'%22 height=%22'+i.fields.file.details.image.height+'%22 viewBox=%220 0'+ i.fields.file.details.image.width+'%20'+ i.fields.file.details.image.height+'%22 xmlns=%22http:%2F%2Fwww.w3.org%2F2000%2Fsvg%22><path d=%22M0 0h'+i.fields.file.details.image.width+'v'+i.fields.file.details.image.width+'H0z%22 fill=%22%23000000%22/></svg>'")
+    img(ref="img" :data-src="i.fields.file.url + '?w=1920&fl=progressive'" :src="'data:image/svg+xml; charset=utf-8, <svg width=%22'+i.fields.file.details.image.width+'%22 height=%22'+i.fields.file.details.image.height+'%22 viewBox=%220 0'+ i.fields.file.details.image.width+'%20'+ i.fields.file.details.image.height+'%22 xmlns=%22http:%2F%2Fwww.w3.org%2F2000%2Fsvg%22><path d=%22M0 0h'+i.fields.file.details.image.width+'v'+i.fields.file.details.image.width+'H0z%22 fill=%22%23f2f2f2%22/></svg>'")
   .slide(v-if="item.fields.video")
     iframe(:src="item.fields.video" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen)
   .slide(v-if="item.fields.description")
@@ -43,23 +43,12 @@ export default {
   },
 
   mounted () {
-    if(window.localStorage.getItem('items') === null) {
-
-    } else {
-      this.$store.dispatch('session', {
-        status: true,
-        data: JSON.parse(window.localStorage.getItem('items'))
-      })
-    }
-
     [].forEach.call(this.$refs.img, img => {
-      img.setAttribute('src', img.getAttribute('data-src'))
       img.onload = () => {
         img.removeAttribute('data-src')
       }
+      img.setAttribute('src', img.getAttribute('data-src'))
     })
-
-
   }
 }
 </script>
@@ -74,6 +63,12 @@ export default {
   justify-content center
   height calc(100vh - 80px)
   position relative
+  div
+    max-width 500px
+    h3
+      font-size 23px
+    a
+      font-size 13px
   &:last-child
     align-items center
     text-align center

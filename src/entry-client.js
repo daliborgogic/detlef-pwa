@@ -35,7 +35,7 @@ if (window.__INITIAL_STATE__) {
 router.onReady(() => {
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js').then(reg => {
+    navigator.serviceWorker.register(`${process.env.DOMAIN}/service-worker.js`).then(reg => {
       reg.onupdatefound = () => {
         const installingWorker = reg.installing
         installingWorker.onstatechange = () => {
@@ -112,6 +112,25 @@ router.onReady(() => {
   }
 
   router.afterEach((to, from) => {
+        window.addEventListener('online', () =>
+    store.dispatch('snackbar', { id: 0, show: false })
+    )
+
+    window.addEventListener('offline', () =>
+      store.dispatch('snackbar', { id: 0, show: true })
+    )
+
+    window.addEventListener('load', () => {
+      window.addEventListener('online', () =>
+        store.dispatch('snackbar', { id: 0, show: false })
+      )
+      store.dispatch('snackbar', {
+        id: 0,
+        show: navigator.onLine ? false : navigator.onLine
+      })
+
+
+    })
     ga('set', 'page', to.fullPath)
     ga('send', 'pageview')
   })

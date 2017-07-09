@@ -17,28 +17,6 @@ export default {
   components: {
     SnackBar,
     AppHeader
-  },
-
-  mounted() {
-    window.addEventListener('online', () =>
-      this.$store.dispatch('snackbar', { id: 0, show: false })
-    )
-
-    window.addEventListener('offline', () =>
-      this.$store.dispatch('snackbar', { id: 0, show: true })
-    )
-
-    window.addEventListener('load', () => {
-      window.addEventListener('online', () =>
-        this.$store.dispatch('snackbar', { id: 0, show: false })
-      )
-      this.$store.dispatch('snackbar', {
-        id: 0,
-        show: navigator.onLine ? false : navigator.onLine
-      })
-
-
-    })
   }
 }
 </script>
@@ -137,6 +115,8 @@ a
 [role="button"]
   -ms-touch-action manipulation
   touch-action manipulation
+h3
+  font-weight 300
 
 .view
   max-width 720px
@@ -146,7 +126,7 @@ a
 
 .fade-enter-active
 .fade-leave-active
-  transition all 250ms ease
+  transition all 250ms ease-in
 
 .fade-enter
 .fade-leave-active
