@@ -2,15 +2,35 @@
 .singl
   .slide(v-for="i, index in item.fields.images" :key="index")
     .slide-placeholder
-      svg(:height="i.fields.file.details.image.height" :viewBox="'0 0 '+ i.fields.file.details.image.width+' '+i.fields.file.details.image.height" :width="i.fields.file.details.image.width" xmlns="http://www.w3.org/2000/svg")
-        path(:d="'M0 0h'+i.fields.file.details.image.width+'v'+i.fields.file.details.image.height+'H0z'" fill="#F2F2F2")
-      img(v-show="loading === false" ref="img" :src="i.fields.file.url + '?w=1920&fl=progressive'")
+      svg(:height="i.fields.file.details.image.height"
+          :viewBox="'0 0 '+ i.fields.file.details.image.width+' '+i.fields.file.details.image.height"
+          :width="i.fields.file.details.image.width" xmlns="http://www.w3.org/2000/svg")
+        path(:d="'M0 0h'+i.fields.file.details.image.width+'v'+i.fields.file.details.image.height+'H0z'"
+          fill="#F2F2F2")
+      //- img(srcset="large.jpg  1024w,
+                      medium.jpg 640w,
+                      small.jpg  320w"
+              sizes="(min-width: 36em) 33.3vw, 100vw"
+              src="small.jpg"
+              alt="A rad wolf")
+      img(v-show="loading === false"
+          ref="img"
+          :srcset="i.fields.file.url + '?w=1920&fl=progressive 1024w,'+ \
+                   i.fields.file.url + '?w=640&fl=progressive 640w,'+ \
+                   i.fields.file.url + '?w=320&fl=progressive 320w'"
+          sizes="(min-width: 36em) 33.3vw, 100vw"
+          :src="i.fields.file.url + '?w=1920&fl=progressive'"
+          alt="")
   .slide(v-if="item.fields.video")
-    iframe(:src="item.fields.video" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen)
+    iframe(:src="item.fields.video"
+          frameborder="0"
+          webkitallowfullscreen
+          mozallowfullscreen
+          allowfullscreen)
   .slide
     .slide-back
       h3(v-if="item.fields.description") {{item.fields.description}}
-      router-link(to="/") Back to Overview
+      router-link(to="/" exact) Back to Overview
   //-pre {{item}}
 </template>
 

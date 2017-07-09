@@ -62,8 +62,9 @@ header
 @media (max-width: 720px)
   header
     nav
-      display none
       padding-left 16px
       padding-right 16px
       height 56px
+      div
+        display none
 </style>
