@@ -80,6 +80,12 @@ body
 main
   flex 1
 
+img
+  color transparent
+  vertical-align middle
+  border 0
+
+
 body
   margin 0
   font-family $sansSerif

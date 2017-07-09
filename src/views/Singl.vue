@@ -2,24 +2,19 @@
 .singl
   .slide(v-for="i, index in item.fields.images" :key="index")
     .slide-placeholder
-      svg(ref="svg" :height="i.fields.file.details.image.height"
+      svg(ref="svg"
+          :height="i.fields.file.details.image.height"
           :viewBox="'0 0 '+ i.fields.file.details.image.width+' '+i.fields.file.details.image.height"
           :width="i.fields.file.details.image.width" xmlns="http://www.w3.org/2000/svg")
         path(:d="'M0 0h'+i.fields.file.details.image.width+'v'+i.fields.file.details.image.height+'H0z'"
           fill="#F2F2F2")
-      //- img(srcset="large.jpg  1024w,
-                      medium.jpg 640w,
-                      small.jpg  320w"
-              sizes="(min-width: 36em) 33.3vw, 100vw"
-              src="small.jpg"
-              alt="A rad wolf")
       img(ref="img"
           :data-srcset="i.fields.file.url + '?w=1920&fl=progressive 1024w,'+ \
-                   i.fields.file.url + '?w=640&fl=progressive 640w,'+ \
-                   i.fields.file.url + '?w=320&fl=progressive 320w'"
+                        i.fields.file.url + '?w=1920&fl=progressive 640w,'+ \
+                        i.fields.file.url + '?w=320&fl=progressive 320w'"
           sizes="(min-width: 36em) 33.3vw, 100vw"
-          :data-src="i.fields.file.url + '?w=1920&fm=jpg&fl=progressive'"
-          alt="")
+          :alt="i.fields.file.url")
+          //-:src="i.fields.file.url + '?w=1920&fm=jpg&fl=progressive'"
   .slide(v-if="item.fields.video")
     iframe(:src="item.fields.video"
           frameborder="0"
@@ -34,6 +29,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'single-view',
 
@@ -70,23 +66,32 @@ export default {
   },
 
   mounted () {
-    // https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver
-    let observer = new IntersectionObserver(entries => {
-      entries.forEach(change => {
-        if (change.isIntersecting === true) {
-          //change.target.src = change.target.getAttribute('data-src')
-          change.target.srcset = change.target.getAttribute('data-srcset')
-        }
+    const imgs = [ ...this.$refs.img]
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(change => {
+          if (change.isIntersecting === true) {
+            change.target.setAttribute('srcset', change.target.getAttribute('data-srcset'))
+          }
+        })
       })
-    }, {
-      // root: null,
-      // rootMargin: '0px',
-      // threshold: [0]
-    })
 
-    const imgs = [ ...this.$refs.img ]
+      imgs.forEach(img => observer.observe(img))
+    } else {
+      imgs.forEach(img => {
+        img.setAttribute('srcset', img.getAttribute('data-srcset'))
+      })
+    }
+  },
 
-    imgs.forEach(img => observer.observe(img))
+  beforeDestroy () {
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(entries => {})
+      const imgs = [ ...this.$refs.img]
+
+      imgs.forEach(img => observer.unobserve(img))
+    }
   }
 }
 </script>
@@ -137,6 +142,8 @@ export default {
       max-height none
       width 100%
       height auto
+    img
+      border-color transparent
   .slide iframe
       height calc(56.25vw - 1rem)
       width 100%
