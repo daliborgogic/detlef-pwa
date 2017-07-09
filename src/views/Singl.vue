@@ -2,7 +2,7 @@
 .singl
   .slide(v-for="i, index in item.fields.images" :key="index")
     .slide-placeholder
-      svg(:height="i.fields.file.details.image.height"
+      svg(ref="svg" :height="i.fields.file.details.image.height"
           :viewBox="'0 0 '+ i.fields.file.details.image.width+' '+i.fields.file.details.image.height"
           :width="i.fields.file.details.image.width" xmlns="http://www.w3.org/2000/svg")
         path(:d="'M0 0h'+i.fields.file.details.image.width+'v'+i.fields.file.details.image.height+'H0z'"
@@ -13,13 +13,12 @@
               sizes="(min-width: 36em) 33.3vw, 100vw"
               src="small.jpg"
               alt="A rad wolf")
-      img(v-show="loading === false"
-          ref="img"
-          :srcset="i.fields.file.url + '?w=1920&fl=progressive 1024w,'+ \
+      img(ref="img"
+          :data-srcset="i.fields.file.url + '?w=1920&fl=progressive 1024w,'+ \
                    i.fields.file.url + '?w=640&fl=progressive 640w,'+ \
                    i.fields.file.url + '?w=320&fl=progressive 320w'"
           sizes="(min-width: 36em) 33.3vw, 100vw"
-          :src="i.fields.file.url + '?w=1920&fl=progressive'"
+          :data-src="i.fields.file.url + '?w=1920&fl=progressive'"
           alt="")
   .slide(v-if="item.fields.video")
     iframe(:src="item.fields.video"
@@ -71,11 +70,23 @@ export default {
   },
 
   mounted () {
-    [].forEach.call(this.$refs.img, img => {
-      img.onload = () => {
-        this.loading = false
-      }
+    // https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver
+    let observer = new IntersectionObserver(entries => {
+      entries.forEach(change => {
+        if (change.isIntersecting === true) {
+          change.target.srcset = change.target.getAttribute('data-srcset')
+          change.target.src = change.target.getAttribute('data-src')
+        }
+      })
+    }, {
+      root: null,
+      rootMargin: '0px',
+      threshold: [0],
     })
+
+    const imgs = [ ...this.$refs.img ]
+
+    imgs.forEach(img => observer.observe(img))
   }
 }
 </script>
