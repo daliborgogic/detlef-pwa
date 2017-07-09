@@ -13,8 +13,8 @@
                         i.fields.file.url + '?w=1920&fl=progressive 640w,'+ \
                         i.fields.file.url + '?w=320&fl=progressive 320w'"
           sizes="(min-width: 36em) 33.3vw, 100vw"
-          :alt="i.fields.file.url")
-          //-:src="i.fields.file.url + '?w=1920&fm=jpg&fl=progressive'"
+          :data-src="i.fields.file.url + '?w=1920&fl=progressive'"
+          :alt="i.fields.title")
   .slide(v-if="item.fields.video")
     iframe(:src="item.fields.video"
           frameborder="0"
@@ -25,7 +25,6 @@
     .slide-back
       h3(v-if="item.fields.description") {{item.fields.description}}
       router-link(to="/" exact) Back to Overview
-  //-pre {{item}}
 </template>
 
 <script>
@@ -35,9 +34,9 @@ export default {
 
   meta () {
     const meta = {
-      title: '',
-      description: '',
-      card: ''
+      title: this.item.fields.title,
+      description: this.item.fields.description,
+      card: this.item.fields.card.fields.file.url + '?w=1920'
     }
     return meta
   },
@@ -73,6 +72,7 @@ export default {
         entries.forEach(change => {
           if (change.isIntersecting === true) {
             change.target.setAttribute('srcset', change.target.getAttribute('data-srcset'))
+            change.target.setAttribute('src', change.target.getAttribute('data-src'))
           }
         })
       })
@@ -81,13 +81,14 @@ export default {
     } else {
       imgs.forEach(img => {
         img.setAttribute('srcset', img.getAttribute('data-srcset'))
+        img.setAttribute('src', img.getAttribute('data-src'))
       })
     }
   },
 
   beforeDestroy () {
     if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver(entries => {})
+
       const imgs = [ ...this.$refs.img]
 
       imgs.forEach(img => observer.unobserve(img))
@@ -113,14 +114,17 @@ export default {
   display flex
   align-items center
   justify-content center
-  height 100%
+  height calc(100% - 80px)
   position relative
   img
   svg
-    max-width calc(100% - 80px)
-    max-height calc(100% - 80px)
+    max-width 100%
+    max-height 100%
     vertical-align middle
+  svg
+    width 100%
   img
+    font-size 13px
     position absolute
 .slide-back
   max-width 500px

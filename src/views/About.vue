@@ -1,8 +1,7 @@
 <template lang="pug">
 .about
   div(v-html="marked(page.fields.content)")
-  //-pre.
-    {{page}}
+  pre {{page.fields.card.fields.file.url}}
 </template>
 
 <script>
@@ -11,9 +10,9 @@ export default {
 
   meta () {
     return {
-      title: 'About',
-      description: null,
-      card: null
+      title: this.page.fields.title,
+      description: this.page.fields.description,
+      card: this.page.fields.card.fields.file.url + '?w=1920'
     }
   },
 

@@ -15,8 +15,8 @@
                           i.fields.card.fields.file.url + '?w=360&fl=progressive 640w,'+ \
                           i.fields.card.fields.file.url + '?w=360&fl=progressive 320w'"
             sizes="(min-width: 36em) 33.3vw, 100vw"
+            :data-src="i.fields.card.fields.file.url + '?w=360&fm=jpg&fl=progressive'"
             :alt="i.fields.card.fields.title")
-            //-:src="i.fields.card.fields.file.url + '?w=360&fm=jpg&fl=progressive'"
         svg.icon.icon-video(v-if="i.fields.video" fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg")
           path(d="M8 5v14l11-7z")
           path(d="M0 0h24v24H0z" fill="none")
@@ -32,7 +32,7 @@ export default {
 
   meta () {
     return {
-      title: '',
+      title: 'Photographer',
       description: 'Detlef Schneider is a German born photographer whose work is predominantly focused on sport and fashion.',
       card: null
     }
@@ -57,15 +57,19 @@ export default {
       return this.$store.state.items
     }
   },
+
   mounted () {
     const imgs = [ ...this.$refs.img]
+
     if ('IntersectionObserver' in window) {
+
       // https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver
       // https://developers.google.com/web/updates/2016/04/intersectionobserver
       const observer =  new IntersectionObserver(entries => {
         entries.forEach(change => {
           if (change.isIntersecting === true) {
             change.target.setAttribute('srcset', change.target.getAttribute('data-srcset'))
+            change.target.setAttribute('src', change.target.getAttribute('data-src'))
           }
         })
       })
@@ -74,6 +78,7 @@ export default {
     } else {
       imgs.forEach(img => {
         img.setAttribute('srcset', img.getAttribute('data-srcset'))
+        img.setAttribute('src', img.getAttribute('data-src'))
       })
     }
   },
@@ -111,7 +116,6 @@ export default {
   img
     color transparent
     position absolute
-    outline none
     top 0
     left 0
 .icon-video
