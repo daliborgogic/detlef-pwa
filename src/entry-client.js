@@ -46,8 +46,9 @@ router.onReady(() => {
                 let total = 0
                 return Promise.all(
                   cache.map(cache => {
+
                     // Change this to match the cache name filter you want.
-                    if (!cache.includes('mnml')) {
+                    if (!cache.includes(process.env.CACHE_ID)) {
                       return
                     }
 

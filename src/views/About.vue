@@ -1,7 +1,6 @@
 <template lang="pug">
 .about
   div(v-html="marked(page.fields.content)")
-  pre {{page.fields.card.fields.file.url}}
 </template>
 
 <script>

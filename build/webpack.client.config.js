@@ -24,7 +24,8 @@ const config = merge(base, {
       'process.env.VUE_ENV': '"client"',
       'process.env.DOMAIN': JSON.stringify(process.env.DOMAIN || 'http://localhost:5000'),
       'process.env.SPACE_ID': JSON.stringify(process.env.SPACE_ID),
-      'process.env.ACCESS_TOKEN': JSON.stringify(process.env.ACCESS_TOKEN)
+      'process.env.ACCESS_TOKEN': JSON.stringify(process.env.ACCESS_TOKEN),
+      'process.env.CACHE_ID': JSON.stringify(process.env.CACHE_ID)
     }),
     // extract vendor chunks for better caching
     new webpack.optimize.CommonsChunkPlugin({
@@ -53,7 +54,7 @@ if (process.env.NODE_ENV === 'production') {
     new webpack.optimize.ModuleConcatenationPlugin(),
     // auto generate service worker
     new SWPrecachePlugin({
-      cacheId: 'detlef',
+      cacheId: process.env.CACHE_ID,
       minify: true,
       dontCacheBustUrlsMatching: /./,
       staticFileGlobsIgnorePatterns: [/\.map$/, /\.json$/],

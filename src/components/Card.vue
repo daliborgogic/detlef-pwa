@@ -1,64 +1,37 @@
 <template lang="pug">
-.home
-  //-pre {{items}}
-  //- (original height / original width) x new width
-  ul
-    li.card(v-for="i, index in items" :to="`/${i.fields.tag}/${i.fields.slug}`" :key="index")
-      svg.placeholder(v-if="placeholder" ref="svg"
-        :height="i.fields.card.fields.file.details.image.height"
-        :viewBox="'0 0 '+ i.fields.card.fields.file.details.image.width+' '+i.fields.card.fields.file.details.image.height"
-        :width="i.fields.card.fields.file.details.image.width" xmlns="http://www.w3.org/2000/svg")
-        path(:d="'M0 0h'+i.fields.card.fields.file.details.image.width+'v'+i.fields.card.fields.file.details.image.height+'H0z'"
-          fill="#F2F2F2")
-      img(ref="img"
-        :data-srcset="i.fields.card.fields.file.url + '?w=360&fl=progressive 1024w,'+ \
-                 i.fields.card.fields.file.url + '?w=360&fl=progressive 640w,'+ \
-                 i.fields.card.fields.file.url + '?w=360&fl=progressive 320w'"
-        sizes="(min-width: 36em) 33.3vw, 100vw"
-        :data-src="i.fields.card.fields.file.url + '?w=360&fm=jpg&fl=progressive'"
-        :alt="i.fields.card.fields.title")
-      svg.icon.icon-video(v-if="i.fields.video"
-        fill="#FFFFFF"
-        height="24"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg")
-        path(d="M8 5v14l11-7z")
-        path(d="M0 0h24v24H0z" fill="none")
-      router-link(:to="`/${i.fields.tag}/${i.fields.slug}`")
-        .card-overlay
-          h2 {{i.fields.title}}
-      //-span(style="font-size: 10px") {{i.fields.tag}}
-
+ul
+  li.card(v-for="i, index in data" :to="`/${i.fields.tag}/${i.fields.slug}`" :key="index")
+    svg.placeholder(ref="svg"
+      :height="i.fields.card.fields.file.details.image.height"
+      :viewBox="'0 0 '+ i.fields.card.fields.file.details.image.width+' '+i.fields.card.fields.file.details.image.height"
+      :width="i.fields.card.fields.file.details.image.width" xmlns="http://www.w3.org/2000/svg")
+      path(:d="'M0 0h'+i.fields.card.fields.file.details.image.width+'v'+i.fields.card.fields.file.details.image.height+'H0z'"
+        fill="#F2F2F2")
+    img(ref="img"
+      :data-srcset="i.fields.card.fields.file.url + '?w=360&fl=progressive 1024w,'+ \
+               i.fields.card.fields.file.url + '?w=360&fl=progressive 640w,'+ \
+               i.fields.card.fields.file.url + '?w=360&fl=progressive 320w'"
+      sizes="(min-width: 36em) 33.3vw, 100vw"
+      :data-src="i.fields.card.fields.file.url + '?w=360&fm=jpg&fl=progressive'"
+      :alt="i.fields.card.fields.title")
+    svg.icon.icon-video(v-if="i.fields.video"
+      fill="#FFFFFF"
+      height="24"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg")
+      path(d="M8 5v14l11-7z")
+      path(d="M0 0h24v24H0z" fill="none")
+    router-link(:to="`/${i.fields.tag}/${i.fields.slug}`")
+      .card-overlay
+        h2 {{i.fields.title}}
 </template>
 
 <script>
 export default {
-  name: 'home-view',
+  name: 'card',
 
-  meta () {
-    return {
-      title: 'Photographer',
-      description: 'Detlef Schneider is a German born photographer whose work is predominantly focused on sport and fashion.',
-      card: null
-    }
-  },
-
-  data () {
-    return {
-      placeholder: true
-    }
-  },
-
-  asyncData ({ store }) {
-    return store.dispatch('items')
-  },
-
-  computed: {
-    items () {
-      return this.$store.state.items
-    }
-  },
+  props: ['data'],
 
   mounted () {
     const imgs = [ ...this.$refs.img]
@@ -94,6 +67,8 @@ export default {
   }
 }
 </script>
+
+
 
 <style lang="stylus">
 @import "../variables"
@@ -160,4 +135,5 @@ ul
   .card
     margin-bottom 1rem
 </style>
+
 

@@ -14,14 +14,6 @@ export default {
     context.commit('SNACKBAR', message)
   },
 
-  filter: (context, message) => {
-    context.commit('FILTER', message)
-  },
-
-  session: (context, message) => {
-    context.commit('SESSION', message)
-  },
-
   page({ commit, state }) {
     return new Promise((resolve, reject) => {
       client.getEntries({
@@ -38,7 +30,8 @@ export default {
   items({ commit, state }) {
     return new Promise((resolve, reject) => {
       client.getEntries({
-        content_type: 'item'
+        content_type: 'item',
+         order: 'fields.position'
       })
       .then(res => {
         commit('ITEMS', res.items)
@@ -48,13 +41,69 @@ export default {
     })
   },
 
-  item({ commit, state }, { singl }) {
+  item({ commit, state }) {
     return new Promise((resolve, reject) => {
       client.getEntries({
         content_type: 'item'
       })
       .then(item => {
         commit('ITEM', item )
+        resolve()
+      })
+      .catch((err => console.error(err)))
+    })
+  },
+
+  film({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      client.getEntries({
+        content_type: 'item',
+       'fields.tag': 'film'
+      })
+      .then(item => {
+        commit('FILM', item)
+        resolve()
+      })
+      .catch((err => console.error(err)))
+    })
+  },
+
+  fashion({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      client.getEntries({
+        content_type: 'item',
+       'fields.tag': 'fashion'
+      })
+      .then(item => {
+        commit('FASHION', item)
+        resolve()
+      })
+      .catch((err => console.error(err)))
+    })
+  },
+
+  advertising({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      client.getEntries({
+        content_type: 'item',
+       'fields.tag': 'advertising'
+      })
+      .then(item => {
+        commit('ADVERTISING', item)
+        resolve()
+      })
+      .catch((err => console.error(err)))
+    })
+  },
+
+  sport({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      client.getEntries({
+        content_type: 'item',
+       'fields.tag': 'sport'
+      })
+      .then(item => {
+        commit('SPORT', item)
         resolve()
       })
       .catch((err => console.error(err)))

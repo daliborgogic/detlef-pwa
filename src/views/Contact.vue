@@ -1,6 +1,7 @@
 <template lang="pug">
 .contact
   div(v-html="marked(page.fields.content)")
+  //- ToDo Facebook page link
   //-pre.
     {{page}}
 </template>

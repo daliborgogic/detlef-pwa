@@ -70,6 +70,7 @@ body
   height 100%
 
 #app
+  padding-top 64px
   display flex
   flex-direction column
   min-height 100%
@@ -82,6 +83,7 @@ main
 
 img
   vertical-align middle
+  color #f2f2f2
   &:after
     content attr(alt)
     position absolute
@@ -157,7 +159,7 @@ h3
 
 .fade-enter-active
 .fade-leave-active
-  transition all 250ms ease-in
+  transition all 150ms ease-in
 
 .fade-enter
 .fade-leave-active

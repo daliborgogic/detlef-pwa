@@ -14,11 +14,10 @@ export function createStore () {
       page: [],
       items: [],
       item: '',
-      filter: '',
-      session: {
-        status: false,
-        data: ''
-      }
+      film: [],
+      advertising: [],
+      fashion: [],
+      sport: []
     },
     actions,
     mutations,
