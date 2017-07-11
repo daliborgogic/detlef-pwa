@@ -9,11 +9,11 @@
         path(:d="'M0 0h'+i.fields.file.details.image.width+'v'+i.fields.file.details.image.height+'H0z'"
           fill="#F2F2F2")
       img(ref="img"
-          :srcset="i.fields.file.url + '?h=1920&fm=jpg&fl=progressive 1024w,'+ \
+          :data-srcset="i.fields.file.url + '?h=1920&fm=jpg&fl=progressive 1024w,'+ \
                    i.fields.file.url + '?h=640&fm=jpg&fl=progressive 640w,'+ \
                    i.fields.file.url + '?w=320&fm=jpg&fl=progressive 320w'"
-          sizes="(min-width: 36em) 33.3vw, 100vw"
-          :src="i.fields.file.url + '?w=1920&fm=jpg&fl=progressive'"
+          sizes="(min-width: 719px) 33.3vw, 100vw"
+          :data-src="i.fields.file.url + '?w=1920&fm=jpg&fl=progressive'"
           :alt="i.fields.title")
   .slide(v-if="item.fields.video")
     iframe(:src="item.fields.video"
@@ -62,6 +62,39 @@ export default {
       let a = getKeyByValue(this.$store.state.items, this.$route.params.singl)
       return  this.$store.state.items[a]
     }
+  },
+
+  mounted () {
+    const imgs = [ ...this.$refs.img]
+
+    if ('IntersectionObserver' in window) {
+
+      // https://developers.google.com/web/updates/2016/04/intersectionobserver
+      const observer =  new IntersectionObserver(entries => {
+        entries.forEach(change => {
+          if (change.isIntersecting === true) {
+            change.target.setAttribute('srcset', change.target.getAttribute('data-srcset'))
+            change.target.setAttribute('src', change.target.getAttribute('data-src'))
+          }
+        })
+      })
+
+      imgs.forEach(img => observer.observe(img))
+
+      window.addEventListener('scroll', e => {
+        imgs.forEach(img => {
+          img.setAttribute('srcset', img.getAttribute('data-srcset'))
+          img.setAttribute('src', img.getAttribute('data-src'))
+        })
+
+        imgs.forEach(img => observer.unobserve(img))
+      })
+    } else {
+      imgs.forEach(img => {
+        img.setAttribute('srcset', img.getAttribute('data-srcset'))
+        img.setAttribute('src', img.getAttribute('data-src'))
+      })
+    }
   }
 }
 </script>
@@ -74,7 +107,8 @@ export default {
   display flex
   align-items flex-start
   justify-content center
-  height calc(100vh - 80px)
+  height 100vh
+  padding 80px 0
   position relative
   &:last-child
     align-items center
@@ -83,9 +117,11 @@ export default {
   display flex
   align-items center
   justify-content center
-  height calc(100% - 80px)
+  height 100%
   position relative
   img
+    max-width 100%
+    max-height 100%
   svg
     max-width 100%
     max-height 100%
@@ -102,13 +138,14 @@ export default {
   a
     font-size 13px
   iframe
-    height: calc(100% - 80px)
-    width: calc(156.25vh - 80px)
+    height 100%
+    width 156.25vh
 
 @media (max-width: $mobile)
   .slide
     height auto
-    margin-bottom 1rem
+    padding-top 0
+    padding-bottom .25rem
     img
     svg
       max-width none
@@ -117,7 +154,7 @@ export default {
       height auto
     img
       border-color transparent
-  .slide iframe
+    iframe
       height calc(56.25vw - 1rem)
       width 100%
 </style>

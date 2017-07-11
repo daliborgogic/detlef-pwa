@@ -1,40 +1,17 @@
 <template lang="pug">
 .home
-  //-pre {{items}}
-  //- (original height / original width) x new width
-  ul
-    li.card(v-for="i, index in items" :to="`/${i.fields.tag}/${i.fields.slug}`" :key="index")
-      svg.placeholder(v-if="placeholder" ref="svg"
-        :height="i.fields.card.fields.file.details.image.height"
-        :viewBox="'0 0 '+ i.fields.card.fields.file.details.image.width+' '+i.fields.card.fields.file.details.image.height"
-        :width="i.fields.card.fields.file.details.image.width" xmlns="http://www.w3.org/2000/svg")
-        path(:d="'M0 0h'+i.fields.card.fields.file.details.image.width+'v'+i.fields.card.fields.file.details.image.height+'H0z'"
-          fill="#F2F2F2")
-      img(ref="img"
-        :data-srcset="i.fields.card.fields.file.url + '?w=360&fl=progressive 1024w,'+ \
-                 i.fields.card.fields.file.url + '?w=360&fl=progressive 640w,'+ \
-                 i.fields.card.fields.file.url + '?w=360&fl=progressive 320w'"
-        sizes="(min-width: 36em) 33.3vw, 100vw"
-        :data-src="i.fields.card.fields.file.url + '?w=360&fm=jpg&fl=progressive'"
-        :alt="i.fields.card.fields.title")
-      svg.icon.icon-video(v-if="i.fields.video"
-        fill="#FFFFFF"
-        height="24"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg")
-        path(d="M8 5v14l11-7z")
-        path(d="M0 0h24v24H0z" fill="none")
-      router-link(:to="`/${i.fields.tag}/${i.fields.slug}`")
-        .card-overlay
-          h2 {{i.fields.title}}
-      //-span(style="font-size: 10px") {{i.fields.tag}}
-
+  card(:data="all")
 </template>
 
 <script>
+import Card from '@/components/Card.vue'
+
 export default {
   name: 'home-view',
+
+  components: { Card },
+
+  props: ['data'],
 
   meta () {
     return {
@@ -44,52 +21,13 @@ export default {
     }
   },
 
-  data () {
-    return {
-      placeholder: true
-    }
-  },
-
   asyncData ({ store }) {
     return store.dispatch('items')
   },
 
   computed: {
-    items () {
+    all () {
       return this.$store.state.items
-    }
-  },
-
-  mounted () {
-    const imgs = [ ...this.$refs.img]
-
-    if ('IntersectionObserver' in window) {
-
-      // https://developers.google.com/web/updates/2016/04/intersectionobserver
-      const observer =  new IntersectionObserver(entries => {
-        entries.forEach(change => {
-          if (change.isIntersecting === true) {
-            change.target.setAttribute('srcset', change.target.getAttribute('data-srcset'))
-            change.target.setAttribute('src', change.target.getAttribute('data-src'))
-          }
-        })
-      })
-
-      imgs.forEach(img => observer.observe(img))
-
-      window.addEventListener('scroll', e => {
-        imgs.forEach(img => {
-          img.setAttribute('srcset', img.getAttribute('data-srcset'))
-          img.setAttribute('src', img.getAttribute('data-src'))
-        })
-
-        imgs.forEach(img => observer.unobserve(img))
-      })
-    } else {
-      imgs.forEach(img => {
-        img.setAttribute('srcset', img.getAttribute('data-srcset'))
-        img.setAttribute('src', img.getAttribute('data-src'))
-      })
     }
   }
 }

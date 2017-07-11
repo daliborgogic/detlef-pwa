@@ -70,7 +70,6 @@ body
   height 100%
 
 #app
-  padding-top 64px
   display flex
   flex-direction column
   min-height 100%
@@ -154,7 +153,7 @@ h3
 .view
   max-width 720px
   padding 0 1rem
-  margin 1rem auto 0 auto
+  margin 0 auto
   position relative
 
 .fade-enter-active
@@ -164,4 +163,7 @@ h3
 .fade-enter
 .fade-leave-active
   opacity 0
+@media(max-width: $mobile)
+  .view
+    padding 0
 </style>

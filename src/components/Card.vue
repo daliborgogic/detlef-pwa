@@ -133,7 +133,7 @@ ul
     column-count 1
     column-gap 0
   .card
-    margin-bottom 1rem
+    margin-bottom .25rem
 </style>
 
 
