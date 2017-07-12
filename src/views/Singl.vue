@@ -1,6 +1,6 @@
 <template lang="pug">
-.singl
-  .slide(ref="slide" v-for="i, index in item.fields.images" :key="index")
+.singl(tabindex="0" @keyup.up="up" @keyup.down="down" @keyup.space="space")
+  .slide(ref="slide" v-for="i, index in item.fields.images")
     .slide-placeholder
       svg(ref="svg"
           :height="i.fields.file.details.image.height"
@@ -8,9 +8,9 @@
           :width="i.fields.file.details.image.width" xmlns="http://www.w3.org/2000/svg")
         path(:d="'M0 0h'+i.fields.file.details.image.width+'v'+i.fields.file.details.image.height+'H0z'"
           fill="#F2F2F2")
-      img(ref="img"
+      img(v-observe-visibility="visibilityChanged"
           :data-srcset="i.fields.file.url + '?h=1920&fm=jpg&fl=progressive 1024w,'+ \
-                   i.fields.file.url + '?h=640&fm=jpg&fl=progressive 640w,'+ \
+                   i.fields.file.url + '?h=1080&fm=jpg&fl=progressive 640w,'+ \
                    i.fields.file.url + '?w=320&fm=jpg&fl=progressive 320w'"
           sizes="(min-width: 719px) 33.3vw, 100vw"
           :data-src="i.fields.file.url + '?w=1920&fm=jpg&fl=progressive'"
@@ -28,7 +28,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'single-view',
 
@@ -40,10 +39,9 @@ export default {
     }
     return meta
   },
+
   data () {
-    return {
-      loading: true
-    }
+    return {}
   },
 
   asyncData ({store, data}) {
@@ -51,10 +49,6 @@ export default {
   },
 
   computed: {
-    filter () {
-      return this.$store.state.filter
-    },
-
     item () {
       function getKeyByValue(object, value) {
         return Object.keys(object).find(key => object[key].fields.slug === value)
@@ -64,36 +58,23 @@ export default {
     }
   },
 
-  mounted () {
-    const imgs = [ ...this.$refs.img]
+  methods: {
+    visibilityChanged (isVisible, entry) {
+      if (isVisible === true) {
+        entry.target.setAttribute('srcset', entry.target.getAttribute('data-srcset'))
+        entry.target.setAttribute('src', entry.target.getAttribute('data-src'))
+      }
+    },
+    up () {
+      console.log('Up')
+    },
 
-    if ('IntersectionObserver' in window) {
+    down () {
+      console.log('Down')
+    },
 
-      // https://developers.google.com/web/updates/2016/04/intersectionobserver
-      const observer =  new IntersectionObserver(entries => {
-        entries.forEach(change => {
-          if (change.isIntersecting === true) {
-            change.target.setAttribute('srcset', change.target.getAttribute('data-srcset'))
-            change.target.setAttribute('src', change.target.getAttribute('data-src'))
-          }
-        })
-      })
-
-      imgs.forEach(img => observer.observe(img))
-
-      window.addEventListener('scroll', e => {
-        imgs.forEach(img => {
-          img.setAttribute('srcset', img.getAttribute('data-srcset'))
-          img.setAttribute('src', img.getAttribute('data-src'))
-        })
-
-        imgs.forEach(img => observer.unobserve(img))
-      })
-    } else {
-      imgs.forEach(img => {
-        img.setAttribute('srcset', img.getAttribute('data-srcset'))
-        img.setAttribute('src', img.getAttribute('data-src'))
-      })
+    space () {
+      console.log('Space')
     }
   }
 }
@@ -103,6 +84,7 @@ export default {
 @import "../variables"
 .singl.view
   max-width none
+  margin-top 0
 .slide
   display flex
   align-items flex-start

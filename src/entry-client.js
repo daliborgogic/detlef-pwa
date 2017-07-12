@@ -82,7 +82,7 @@ router.onReady(() => {
               console.error('The installing service worker became redundant.')
               break
             default:
-              // Ignore
+              break
           }
         }
       }

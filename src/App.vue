@@ -1,5 +1,5 @@
 <template lang="pug">
-#app(ref="app")
+#app(ref="app" v-bind:class="[touch ? 'touch' : '']")
   app-header
   main
     transition(name="fade" mode="out-in")
@@ -19,22 +19,23 @@ export default {
     AppHeader
   },
 
+  data () {
+    return {
+      touch: false
+    }
+  },
+
   mounted () {
     // https://w3c.github.io/pointerevents/
     window.addEventListener('pointerdown', e => {
-      switch (e.pointerType) {
-      case 'mouse':
-        // mouse detected
-        this.$refs.app.className += ' mouse'
-        break
-      case 'touch':
-        // touch detected
-        this.$refs.app.className += ' mouse'
-        break
-      default:
-        // pointerType unknown or cannot be detected
+      if (e.pointerType === 'touch') {
+        this.touch = true
       }
     })
+  },
+
+  beforeDestroy () {
+    // window.removeEventListener('pointerdown', false)
   }
 }
 </script>
@@ -153,7 +154,7 @@ h3
 .view
   max-width 720px
   padding 0 1rem
-  margin 0 auto
+  margin 80px auto 0 auto
   position relative
 
 .fade-enter-active

@@ -91,6 +91,8 @@ ul
     background-color rgba(white, .7)
     h2
       color black
+#app.touch .card-overlay:hover
+  display none
 @media (max-width: $mobile)
   ul
     column-count 1

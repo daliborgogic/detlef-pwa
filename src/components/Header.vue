@@ -1,6 +1,6 @@
 <template lang="pug">
-header(role="banner")
-  nav
+header(role="banner" @mouseover="headerOver" @mouseleave="headerLeave")
+  nav(ref="nav" v-bind:class="[navVisible ? 'true' : 'false']")
     div
       router-link.mh(to="/" exact) Detlef Schneider
     div
@@ -14,26 +14,45 @@ header(role="banner")
 
 <script>
 export default {
-  name: 'header'
+  name: 'header',
+
+  data () {
+    return {
+      navVisible: true
+    }
+  },
+
+  mounted () {
+    setTimeout(() => this.navVisible = false, 5000)
+  },
+
+  methods: {
+    headerOver () { this.navVisible = true },
+    headerLeave () { this.navVisible = false }
+  }
 }
 </script>
 
 <style lang="stylus">
 @import "../variables"
+.false
+  transform translateY(-100px)
+.true
+  transform translateY(0)
 header
   position fixed
   width 100%
   top 0
   background-color white
-  z-index 1
+  z-index 10
   //border-bottom 1px solid tomato
   nav
     margin 0 auto
     height 64px
     padding 0 1rem
     align-items center
-    //justify-content center
     display flex
+    transition all 500ms ease-out
     div:first-child
       order 1
       a

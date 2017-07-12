@@ -7,6 +7,10 @@ import metaMixin from './utilities/meta'
 import * as filters from './utilities/filters'
 import marked from 'marked'
 
+import ObserveVisibility  from './directives/observe-visibility'
+
+Vue.directive('observe-visibility', ObserveVisibility)
+
 Vue.mixin(metaMixin)
 Vue.mixin({
   methods: {

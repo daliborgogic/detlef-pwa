@@ -7,10 +7,10 @@ ul
       :width="i.fields.card.fields.file.details.image.width" xmlns="http://www.w3.org/2000/svg")
       path(:d="'M0 0h'+i.fields.card.fields.file.details.image.width+'v'+i.fields.card.fields.file.details.image.height+'H0z'"
         fill="#F2F2F2")
-    img(ref="img"
+    img(v-observe-visibility="visibilityChanged"
       :data-srcset="i.fields.card.fields.file.url + '?w=360&fl=progressive 1024w,'+ \
-               i.fields.card.fields.file.url + '?w=360&fl=progressive 640w,'+ \
-               i.fields.card.fields.file.url + '?w=360&fl=progressive 320w'"
+                    i.fields.card.fields.file.url + '?w=360&fl=progressive 640w,'+ \
+                    i.fields.card.fields.file.url + '?w=360&fl=progressive 320w'"
       sizes="(min-width: 36em) 33.3vw, 100vw"
       :data-src="i.fields.card.fields.file.url + '?w=360&fm=jpg&fl=progressive'"
       :alt="i.fields.card.fields.title")
@@ -33,36 +33,12 @@ export default {
 
   props: ['data'],
 
-  mounted () {
-    const imgs = [ ...this.$refs.img]
-
-    if ('IntersectionObserver' in window) {
-
-      // https://developers.google.com/web/updates/2016/04/intersectionobserver
-      const observer =  new IntersectionObserver(entries => {
-        entries.forEach(change => {
-          if (change.isIntersecting === true) {
-            change.target.setAttribute('srcset', change.target.getAttribute('data-srcset'))
-            change.target.setAttribute('src', change.target.getAttribute('data-src'))
-          }
-        })
-      })
-
-      imgs.forEach(img => observer.observe(img))
-
-      window.addEventListener('scroll', e => {
-        imgs.forEach(img => {
-          img.setAttribute('srcset', img.getAttribute('data-srcset'))
-          img.setAttribute('src', img.getAttribute('data-src'))
-        })
-
-        imgs.forEach(img => observer.unobserve(img))
-      })
-    } else {
-      imgs.forEach(img => {
-        img.setAttribute('srcset', img.getAttribute('data-srcset'))
-        img.setAttribute('src', img.getAttribute('data-src'))
-      })
+  methods: {
+    visibilityChanged (isVisible, entry) {
+      if (isVisible === true) {
+        entry.target.setAttribute('srcset', entry.target.getAttribute('data-srcset'))
+        entry.target.setAttribute('src', entry.target.getAttribute('data-src'))
+      }
     }
   }
 }
