@@ -105,8 +105,9 @@ router.onReady(() => {
   // Trace debugging
   // https://developers.google.com/analytics/devguides/collection/analyticsjs/debugging
   // window.ga_debug = {trace: true}
+  console.log('TRACKING_ID ', process.env.TRACKING_ID)
 
-  ga('create', 'UA-NNNNNN-N', 'auto')
+  ga('create', process.env.TRACKING_ID, 'auto')
 
   if (isLocalhost) {
     ga('set', 'sendHitTask', null)

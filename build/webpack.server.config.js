@@ -28,7 +28,8 @@ module.exports = merge(base, {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
       'process.env.VUE_ENV': '"server"',
-      'process.env.DOMAIN': JSON.stringify(process.env.DOMAIN || 'http://localhost:5000')
+      'process.env.DOMAIN': JSON.stringify(process.env.DOMAIN || 'http://localhost:5000'),
+      'process.env.TRACKING_ID': JSON.stringify(process.env.TRACKING_ID)
     }),
     new VueSSRServerPlugin()
   ]

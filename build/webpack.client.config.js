@@ -25,7 +25,8 @@ const config = merge(base, {
       'process.env.DOMAIN': JSON.stringify(process.env.DOMAIN || 'http://localhost:5000'),
       'process.env.SPACE_ID': JSON.stringify(process.env.SPACE_ID),
       'process.env.ACCESS_TOKEN': JSON.stringify(process.env.ACCESS_TOKEN),
-      'process.env.CACHE_ID': JSON.stringify(process.env.CACHE_ID)
+      'process.env.CACHE_ID': JSON.stringify(process.env.CACHE_ID || 'initial'),
+      'process.env.TRACKING_ID': JSON.stringify(process.env.TRACKING_ID)
     }),
     // extract vendor chunks for better caching
     new webpack.optimize.CommonsChunkPlugin({
