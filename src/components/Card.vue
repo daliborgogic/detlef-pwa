@@ -41,7 +41,7 @@ export default {
     // https://developers.google.com/web/updates/2016/04/intersectionobserver
     if (typeof IntersectionObserver === 'undefined') {
       console.warn(`IntersectionObserver API is not available in your browser.`)
-      require('intersection-observer')
+      import(/* webpackChunkName: "intersection-observer" */ 'intersection-observer')
     } else  {
       const cards = [ ...this.$refs.card]
       const observer =  new IntersectionObserver(entries => {

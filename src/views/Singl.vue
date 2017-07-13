@@ -2,7 +2,7 @@
 .singl(ref="singl")
   .slide(ref="slide"
       v-for="i, index in item.fields.images"
-      :data-slide="index")
+      :data-slide="index" :id="index")
     .slide-placeholder
       svg(ref="svg"
           :height="i.fields.file.details.image.height"
@@ -23,11 +23,11 @@
           webkitallowfullscreen
           mozallowfullscreen
           allowfullscreen)
-  .slide(ref="slideFooter" v-bind:data-slide="slides")
+  .slide(ref="slideFooter" v-bind:data-slide="slides" v-bind:id="slides")
     .slide-placeholder
       .slide-back
         h3(v-if="item.fields.description") {{item.fields.description}}
-        router-link(to="/" exact) Back to Overview
+        router-link(to="/"  exact) Back to Overview
 </template>
 
 <script>
@@ -64,48 +64,14 @@ export default {
   },
 
   methods: {
-
     scrollIt (destination, duration = 200, easing = 'linear', callback) {
 
       const easings = {
-        linear(t) {
-          return t;
-        },
         easeInQuad(t) {
-          return t * t;
+          return t * t
         },
         easeOutQuad(t) {
-          return t * (2 - t);
-        },
-        easeInOutQuad(t) {
-          return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-        },
-        easeInCubic(t) {
-          return t * t * t;
-        },
-        easeOutCubic(t) {
-          return (--t) * t * t + 1;
-        },
-        easeInOutCubic(t) {
-          return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
-        },
-        easeInQuart(t) {
-          return t * t * t * t;
-        },
-        easeOutQuart(t) {
-          return 1 - (--t) * t * t * t;
-        },
-        easeInOutQuart(t) {
-          return t < 0.5 ? 8 * t * t * t * t : 1 - 8 * (--t) * t * t * t;
-        },
-        easeInQuint(t) {
-          return t * t * t * t * t;
-        },
-        easeOutQuint(t) {
-          return 1 + (--t) * t * t * t * t;
-        },
-        easeInOutQuint(t) {
-          return t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * (--t) * t * t * t * t;
+          return t * (2 - t)
         }
       };
 
@@ -155,7 +121,7 @@ export default {
     // https://developers.google.com/web/updates/2016/04/intersectionobserver
     if (typeof IntersectionObserver === 'undefined') {
       console.warn(`IntersectionObserver API is not available in your browser.`)
-      require('intersection-observer')
+      import(/* webpackChunkName: "intersection-observer" */ 'intersection-observer')
     } else  {
       const slides = [ ...this.$refs.slide, this.$refs.slideFooter]
       this.slides = slides.length - 1
