@@ -8,6 +8,7 @@ export default {
   bind (el, { value }, vnode) {
     if (typeof IntersectionObserver === 'undefined') {
       console.warn('[vue-observe-visibility] IntersectionObserver API is not available in your browser. Please install this polyfill: https://github.com/WICG/IntersectionObserver/tree/gh-pages/polyfill')
+      //require('intersection-observer')
     } else {
       throwValueError(value)
       el._vue_visibilityCallback = value
@@ -16,7 +17,7 @@ export default {
         if (el._vue_visibilityCallback) {
           el._vue_visibilityCallback.call(null, entry.intersectionRatio > 0, entry)
         }
-      },{
+      }, {
         rootMargin: '0px',
       })
       // Wait for the element to be in document

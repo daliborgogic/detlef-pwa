@@ -100,18 +100,18 @@ router.onReady(() => {
     window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
   )
 
-  window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date
+  //window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date
 
   // Trace debugging
   // https://developers.google.com/analytics/devguides/collection/analyticsjs/debugging
   // window.ga_debug = {trace: true}
-  console.log('TRACKING_ID ', process.env.TRACKING_ID)
+  //console.log('TRACKING_ID ', process.env.TRACKING_ID)
 
-  ga('create', process.env.TRACKING_ID, 'auto')
+ // ga('create', process.env.TRACKING_ID, 'auto')
 
-  if (isLocalhost) {
-    ga('set', 'sendHitTask', null)
-  }
+  // if (isLocalhost) {
+  //   ga('set', 'sendHitTask', null)
+  // }
 
   router.afterEach((to, from) => {
         window.addEventListener('online', () =>
@@ -133,8 +133,8 @@ router.onReady(() => {
 
 
     })
-    ga('set', 'page', to.fullPath)
-    ga('send', 'pageview')
+    // ga('set', 'page', to.fullPath)
+    // ga('send', 'pageview')
   })
 
   // Add router hook for handling asyncData.

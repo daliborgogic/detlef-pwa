@@ -1,14 +1,18 @@
 <template lang="pug">
-ul
-  li.card(v-for="i, index in data" :to="`/${i.fields.tag}/${i.fields.slug}`" :key="index")
+ul(ref="root")
+  li.card(ref="card"
+    v-for="i, index in data"
+    :to="`/${i.fields.tag}/${i.fields.slug}`"
+    :data-slide="index"
+    :key="index")
     svg.placeholder(ref="svg"
       :height="i.fields.card.fields.file.details.image.height"
       :viewBox="'0 0 '+ i.fields.card.fields.file.details.image.width+' '+i.fields.card.fields.file.details.image.height"
       :width="i.fields.card.fields.file.details.image.width" xmlns="http://www.w3.org/2000/svg")
       path(:d="'M0 0h'+i.fields.card.fields.file.details.image.width+'v'+i.fields.card.fields.file.details.image.height+'H0z'"
         fill="#F2F2F2")
-    img(v-observe-visibility="visibilityChanged"
-      :data-srcset="i.fields.card.fields.file.url + '?w=360&fl=progressive 1024w,'+ \
+    img(ref="img"
+       :data-srcset="i.fields.card.fields.file.url + '?w=360&fl=progressive 1024w,'+ \
                     i.fields.card.fields.file.url + '?w=360&fl=progressive 640w,'+ \
                     i.fields.card.fields.file.url + '?w=360&fl=progressive 320w'"
       sizes="(min-width: 36em) 33.3vw, 100vw"
@@ -33,12 +37,29 @@ export default {
 
   props: ['data'],
 
-  methods: {
-    visibilityChanged (isVisible, entry) {
-      if (isVisible === true) {
-        entry.target.setAttribute('srcset', entry.target.getAttribute('data-srcset'))
-        entry.target.setAttribute('src', entry.target.getAttribute('data-src'))
-      }
+  mounted () {
+    // https://developers.google.com/web/updates/2016/04/intersectionobserver
+    if (typeof IntersectionObserver === 'undefined') {
+      console.warn(`IntersectionObserver API is not available in your browser.`)
+      require('intersection-observer')
+    } else  {
+      const cards = [ ...this.$refs.card]
+      const observer =  new IntersectionObserver(entries => {
+        entries.forEach(change => {
+          if (change.isIntersecting === true) {
+            const count = change.target.getAttribute('data-slide')
+            console.log(count ,' in view')
+            this.$refs.img[count].setAttribute('srcset', this.$refs.img[count].getAttribute('data-srcset'))
+            this.$refs.img[count].setAttribute('src', this.$refs.img[count].getAttribute('data-src'))
+          }
+        })
+      },{
+        root: this.$refs.root[0],
+        rootMargin: '-80px',
+        threshold: [0],
+      })
+
+      cards.forEach(card => observer.observe(card))
     }
   }
 }

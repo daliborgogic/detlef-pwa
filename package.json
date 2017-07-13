@@ -21,6 +21,7 @@
     "es6-promise": "^4.1.1",
     "express": "^4.15.2",
     "extract-text-webpack-plugin": "^3.0.0",
+    "intersection-observer": "^0.3.2",
     "lru-cache": "^4.0.2",
     "marked": "^0.3.6",
     "serve-favicon": "^2.4.1",
